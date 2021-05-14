@@ -180,6 +180,12 @@ public class MainFrame extends JFrame {
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            if (!isValid(destinationAddress)) {
+                JOptionPane.showMessageDialog(this,
+                        "Неверный IP адрес", "Ошибка",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             if (message.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
                         "Введите текст сообщения", "Ошибка",
@@ -214,6 +220,27 @@ public class MainFrame extends JFrame {
                     "Не удалось отправить сообщение", "Ошибка",
                     JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+
+    private boolean isValid(String address) {
+        var parts = address.split("\\.");
+        if (parts.length != 4)
+            return false;
+        for (var part : parts) {
+            try {
+                int ipOctet = Integer.parseInt(part);
+                if (ipOctet < 0 || ipOctet > 255)
+                    return false;
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(MainFrame.this,
+                        "IP адрес содержит недопустимые знаки", "Ошибка",
+                        JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static void main(String[] args) {
